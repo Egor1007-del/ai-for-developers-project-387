@@ -1,0 +1,11 @@
+main.container.py-5
+  .row.justify-content-center
+    .col-lg-8
+      h1.h2.fw-bold.mb-4 Админка
+      = link_to "Создать тип события", new_admin_event_type_path, class: "btn btn-primary mb-4"
+      section.mb-5#upcoming-bookings[data-controller="upcoming-bookings"]
+        h2.h3.fw-bold Предстоящие записи
+        p[role="status" data-upcoming-bookings-target="status"] Загрузка предстоящих записей…
+        ul.list-group[data-upcoming-bookings-target="list"]
+        button.btn.btn-outline-primary.d-none[type="button" data-upcoming-bookings-target="retry" data-action="upcoming-bookings#load"] Повторить
+      = link_to "На главную", root_path, class: "d-inline-block mt-4"
