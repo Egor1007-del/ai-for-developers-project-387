@@ -2,7 +2,7 @@
 
 ## Архитектура
 
-- **Стек:** Ruby 4.0.6, Rails 8.1.4.1, SQLite для разработки, PostgreSQL для production, Slim, Bootstrap 5, Hotwire (Turbo и Stimulus), esbuild.
+- **Стек:** Ruby 4.0.10, Rails 8.1.4.1, SQLite для разработки, PostgreSQL для production, Slim, Bootstrap 5, Hotwire (Turbo и Stimulus), esbuild.
 - **Архитектура:** Rails-монолит с серверной генерацией HTML, без отдельного frontend-приложения.
 - **Текущее состояние:** доступны бронирование звонков и раздел владельца; `/up` — проверка работоспособности. Подробности и ссылки на исходную спецификацию — в `README.md`.
 
@@ -28,6 +28,7 @@ mise run check
 
 - JavaScript и TypeScript собираются через esbuild (jsbundling-rails); контроллеры Stimulus регистрируются в `app/javascript/controllers/index.js`.
 - Стили Bootstrap редактируются в `app/assets/stylesheets/application.bootstrap.scss`; CSS собирается через Yarn.
+- Контракт API редактируется в `api/main.tsp`. `api/openapi.yaml` и `app/javascript/generated/` — генерируемые артефакты: не редактировать их вручную, обновлять командой `mise exec -- yarn generate:api`.
 - Коммиты оформлять по **Conventional Commits**: `feat:`, `fix:`, `refactor:`, `test:`, `docs:`, `chore:`. Сообщения должны отражать фактические изменения.
 - Коммит реализации ссылается на тикет, который он закрывает, См. `docs/agents/issue-tracker.md`
 - Запускать тесты для измененной функциональности. Перед завершением значимого этапа выполнять `mise run check`.
