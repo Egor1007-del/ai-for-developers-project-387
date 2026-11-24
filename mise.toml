@@ -5,6 +5,7 @@ yarn = "1.22.22"
 hk = "2.11.1"
 pitchfork = "2.33.1"
 jactionlint = "2.6.0"
+shellcheck = "0.10.0"
 "aqua:anomalyco/opencode" = "1.19.6"
 
 [settings]

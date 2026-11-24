@@ -86,13 +86,9 @@ jobs:
       - name: Verify autonomous startup
         run: |
           set -euo pipefail
-          cleanup() {
-            docker logs calendar-ci-autonomous || true
-            docker rm -f calendar-ci-autonomous || true
-          }
-          trap cleanup EXIT
+          trap 'docker logs calendar-ci-autonomous || true; docker rm -f calendar-ci-autonomous || true' EXIT
           docker run -d --name calendar-ci-autonomous -p 8080:8080 -e PORT=8080 calendar-ci
-          for attempt in {1..60}; do
+          for _ in {1..60}; do
             if curl --fail --silent http://127.0.0.1:8080/ > /dev/null; then
               exit 0
             fi
@@ -115,7 +111,7 @@ jobs:
               -e DATABASE_URL=postgres://postgres:postgres@127.0.0.1:5432/calendar_production \
               -e SECRET_KEY_BASE=ci-only-secret-key-base-not-for-production \
               -e PORT=4321 calendar-ci
-            for attempt in {1..60}; do
+            for _ in {1..60}; do
               if curl --fail --silent http://127.0.0.1:4321/up > /dev/null; then
                 return 0
               fi
