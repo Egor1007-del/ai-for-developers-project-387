@@ -1,5 +1,17 @@
 # Список изменений
 
+## [0.4.0](https://github.com/Egor1007-del/ai-for-developers-project-387/compare/v0.3.0...v0.4.0) (2026-11-24)
+
+
+### Новые возможности
+
+* настроить OpenCode для комментариев ([#5](https://github.com/Egor1007-del/ai-for-developers-project-387/issues/5)) ([c0e1c83](https://github.com/Egor1007-del/ai-for-developers-project-387/commit/c0e1c835146730a5bbf61b9202de8377b8931b40))
+
+
+### Исправления
+
+* обновить Puma и исправить проверки CI ([#5](https://github.com/Egor1007-del/ai-for-developers-project-387/issues/5)) ([89692fa](https://github.com/Egor1007-del/ai-for-developers-project-387/commit/89692fa5675855bd7a296a564d6ba69066ac1dd0))
+
 ## [0.3.0](https://github.com/Egor1007-del/ai-for-developers-project-386/compare/v0.2.0...v0.3.0) (2026-11-18)
 
 
