@@ -33,7 +33,7 @@
 
 ## Установка
 
-Необходим [mise](https://mise.jdx.dev/) для установки Ruby, Node.js, Yarn и hk.
+Необходим [mise](https://mise.jdx.dev/) для установки инструментов, указанных в `mise.toml`.
 Также установите утилиту командной строки `sqlite3`: Rails использует её для загрузки и сохранения SQL-схемы базы данных (например, `sudo apt install sqlite3` в Debian/Ubuntu).
 
 ```bash
@@ -138,7 +138,23 @@ mise run security # Brakeman
 mise run check    # все проверки через bin/ci
 ```
 
-Без mise общую проверку можно запустить командой `bin/ci` после установки зависимостей. Она же выполняется в GitHub Actions при каждом push и pull request.
+Без mise общую проверку можно запустить командой `bin/ci` после установки зависимостей и инструментов, включая jactionlint. Она же выполняется в GitHub Actions при push в `main` и pull request.
+
+### OpenCode в GitHub Actions
+
+Workflow `.github/workflows/opencode.yml` запускает OpenCode для помощи с задачами и кодом по комментариям в issue и pull request, включая комментарии к строкам кода. Поддерживаются упоминания `/oc` и `/opencode`, например:
+
+```text
+/oc explain this issue
+```
+
+Запуск доступен доверенным участникам с правом записи; комментарии ботов и PR из форков исключены. Агент использует бесплатную на момент настройки модель `opencode/deepseek-v4.1-flash-free` через OpenCode Console; её доступность и лимиты могут измениться. Для запуска нужны установленное GitHub App OpenCode Agent и секрет Actions `OPENCODE_API_KEY` с ключом Console. Ключ не помещается в репозиторий.
+
+Агент отвечает комментарием в issue или PR; в зависимости от задачи он может изменить ветку PR или создать ветку и PR для issue. Состояние и журналы доступны во вкладке GitHub Actions, ссылка на запуск включается в ответ агента. Одновременные запросы к одной issue или PR выполняются последовательно; тайм-аут задания — 15 минут.
+
+OpenCode обнаруживает проектные skills из `.agents/skills`. Workflow проверяет обнаружение skill `implement` после checkout; использование конкретного skill зависит от запроса и решения модели.
+
+В `.github/jactionlint.yaml` согласовано исключение правила `dangerous-triggers` только для `.github/workflows/opencode.yml`, до **24 февраля 2027 года**. Событие `issue_comment` необходимо для команд в issue, а доступ к запуску ограничен доверенными пользователями, проверкой прав и исключением PR из форков. Остаточный риск: агент может встретить недоверенные инструкции в содержимом issue или его комментариях. Исключение и меры защиты нужно пересмотреть к указанной дате. Показать все диагностики без исключений: `mise exec -- jactionlint --no-ignores`.
 
 JavaScript собирается командой `mise exec -- yarn build`, а TypeScript проверяется командой `mise exec -- yarn typecheck`. Новые Stimulus-контроллеры нужно импортировать и регистрировать в `app/javascript/controllers/index.js`. Rails автоматически собирает ассеты при запуске тестов и `assets:precompile`.
 

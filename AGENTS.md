@@ -8,7 +8,7 @@
 
 ## Окружение и команды
 
-Версии Ruby, Node.js и Yarn зафиксированы в `mise.toml`. Для Ruby-команд использовать окружение mise, не смешивая пути gems RVM и mise.
+Версии инструментов зафиксированы в `mise.toml`. Для Ruby-команд использовать окружение mise, не смешивая пути gems RVM и mise.
 
 ```bash
 mise install
@@ -18,6 +18,7 @@ mise exec -- bin/rails test
 mise exec -- bin/rails test test/integration/smoke_test.rb
 mise exec -- bin/rails test:system
 mise exec -- bin/rubocop
+mise exec -- jactionlint
 mise run check
 ```
 
@@ -36,7 +37,7 @@ mise run check
 
 ## CI
 
-- `mise run check` запускает `bin/ci`: подготовку окружения, RuboCop, проверку типов TypeScript, аудит gems, Brakeman, Rails-тесты и проверку seeds.
+- `mise run check` запускает `bin/ci`: подготовку окружения, RuboCop, jactionlint, генерацию и проверку API-артефактов, проверку типов TypeScript, аудит gems, Brakeman, Rails-тесты и проверку seeds.
 - Системные тесты запускаются отдельно.
 - GitHub Actions должен использовать ту же команду `mise run check`.
 

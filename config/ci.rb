@@ -4,6 +4,7 @@ CI.run do
   step "Setup", "bin/setup --skip-server"
 
   step "Style: Ruby", "bin/rubocop"
+  step "GitHub Actions: Lint workflows", "jactionlint"
   step "API: Generate OpenAPI and SDK", "yarn generate:api"
   step "API: Check generated artifacts", "ruby bin/check-api-generated"
   step "Types: TypeScript", "yarn typecheck"

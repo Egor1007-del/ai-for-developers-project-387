@@ -1,0 +1,7 @@
+ignores:
+  - rule: dangerous-triggers
+    file: .github/workflows/opencode.yml
+    reason: >-
+      Comment commands require trusted users, OpenCode checks write access,
+      and pull requests from forks are excluded before the agent runs.
+    expires: "2027-02-24"
