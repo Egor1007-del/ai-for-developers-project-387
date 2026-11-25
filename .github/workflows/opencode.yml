@@ -28,6 +28,7 @@ jobs:
     permissions:
       contents: read
       id-token: write
+      issues: write
       pull-requests: read
     steps:
       - name: Check pull request source
@@ -57,11 +58,28 @@ jobs:
       - name: Verify project skills are discoverable
         if: steps.source.outputs.result == 'true'
         run: |
-          python3 -c 'import pathlib, subprocess; output = subprocess.check_output(["opencode", "debug", "skill"], text=True); expected = str(pathlib.Path(".agents/skills/implement/SKILL.md").resolve()); assert expected in output, "Project skill implement is missing"; print("Project skill implement discovered")'
+          python3 - <<'PY'
+          import json
+          import pathlib
+          import subprocess
+          import tempfile
+
+          with tempfile.TemporaryFile(mode="w+") as output:
+              subprocess.run(["opencode", "debug", "skill"], stdout=output, check=True)
+              output.seek(0)
+              discovered = {skill["location"] for skill in json.load(output)}
+
+          skills = ("triage", "to-spec", "to-tickets", "implement")
+          missing = [skill for skill in skills if str(pathlib.Path(".agents/skills", skill, "SKILL.md").resolve()) not in discovered]
+          if missing:
+              raise SystemExit("Project skills missing: " + ", ".join(missing))
+          print("Project skills discovered: " + ", ".join(skills))
+          PY
       - name: Run OpenCode
         if: steps.source.outputs.result == 'true'
         run: opencode github run
         env:
+          GH_TOKEN: ${{ github.token }}
           MODEL: opencode/deepseek-v4.1-flash-free
           MENTIONS: /opencode,/oc
           SHARE: 'false'

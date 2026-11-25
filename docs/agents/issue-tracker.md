@@ -1,8 +1,12 @@
 # Issue tracker: GitHub
 
 Задачи и спецификации хранятся в GitHub Issues репозитория
-`Egor1007-del/ai-for-developers-project-387`. Используйте подключённый
-GitHub MCP для чтения, создания и изменения задач и комментариев.
+`Egor1007-del/ai-for-developers-project-387`.
+
+Для чтения, создания и изменения задач и комментариев используйте:
+
+- Локальный агент — подключённый GitHub MCP.
+- Агент в GitHub Actions — GitHub CLI (`gh`) с предоставленным `GH_TOKEN`.
 
 ## Соглашения
 
