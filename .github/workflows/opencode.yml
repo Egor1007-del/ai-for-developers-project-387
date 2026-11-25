@@ -81,6 +81,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           MODEL: opencode/deepseek-v4.1-flash-free
+          OPENCODE_CONFIG_CONTENT: '{"small_model":"opencode/mimo-v2.6-flash-free"}'
           MENTIONS: /opencode,/oc
           SHARE: 'false'
           OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
