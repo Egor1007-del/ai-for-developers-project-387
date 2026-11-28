@@ -1,5 +1,12 @@
 ignores:
   - rule: dangerous-triggers
+    file: .github/workflows/opencode-report.yml
+    reason: >-
+      The report reads only Actions job metadata, validates the workflow path,
+      run name and same-repository PR, and does not execute code or use artifacts
+      from the completed run. The token has no code or Actions write access.
+    expires: "2027-02-28"
+  - rule: dangerous-triggers
     file: .github/workflows/opencode.yml
     reason: >-
       Comment commands require trusted users, OpenCode checks write access,

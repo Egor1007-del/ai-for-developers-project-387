@@ -1,0 +1,64 @@
+name: OpenCode interactive report
+
+on:
+  workflow_run:
+    workflows: [OpenCode]
+    types: [completed]
+
+permissions: {}
+
+concurrency:
+  group: opencode-interactive-report-${{ github.event.workflow_run.id }}-${{ github.event.workflow_run.run_attempt }}
+  queue: max
+  cancel-in-progress: false
+
+jobs:
+  report:
+    if: startsWith(github.event.workflow_run.display_title, 'opencode-budget-v1-pr-')
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      actions: read
+      issues: write
+      pull-requests: read
+    steps:
+      - name: Опубликовать итог попытки
+        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8.0.0
+        with:
+          script: |
+            const run = context.payload.workflow_run;
+            if (run.path !== '.github/workflows/opencode.yml') return;
+            const match = /^opencode-budget-v1-pr-([1-9][0-9]*)$/.exec(run.display_title || '');
+            if (!match) return;
+            const number = Number(match[1]);
+            const jobs = await github.paginate(github.rest.actions.listJobsForWorkflowRunAttempt, {
+              ...context.repo, run_id: run.id, attempt_number: run.run_attempt, per_page: 100
+            });
+            const job = jobs.find(job => job.name === 'opencode');
+            if (!job || job.conclusion === 'skipped') return;
+            const completed = name => job.steps?.some(step => step.name === name && step.conclusion === 'success');
+            const admitted = completed('Попытка допущена (budget-v1)');
+            let reason = 'infra';
+            if (completed('Лимит исчерпан (budget-v1)')) reason = 'limit_exhausted';
+            else if (completed('Истекло время агента (budget-v1)') || job.conclusion === 'timed_out') reason = 'timeout';
+            else if (completed('Ошибка агента (budget-v1)') || (admitted && job.conclusion === 'cancelled')) reason = 'agent_failed';
+            else if (completed('Агент завершил работу (budget-v1)')) reason = 'success';
+            let sha = 'недоступен';
+            try {
+              const { data: pr } = await github.rest.pulls.get({ ...context.repo, pull_number: number });
+              if (pr.head.repo?.id !== context.payload.repository.id || pr.base.repo?.id !== context.payload.repository.id) return;
+              sha = pr.head.sha;
+            } catch (error) {
+              core.warning(`Не удалось получить последний SHA: ${error.message}`);
+              reason = 'infra';
+            }
+            const human = reason === 'success' ? 'требуется проверить результат работы агента' : 'требуется';
+            const marker = `<!-- opencode-budget-report:${run.id}:${run.run_attempt} -->`;
+            const comments = await github.paginate(github.rest.issues.listComments, {
+              ...context.repo, issue_number: number, per_page: 100
+            });
+            if (comments.some(comment => comment.user?.login === 'github-actions[bot]' && comment.body?.includes(marker))) return;
+            await github.rest.issues.createComment({
+              ...context.repo, issue_number: number,
+              body: `${marker}\n**Итог интерактивного агента:** \`${reason}\`\n\nПоследний SHA: \`${sha}\`  \n[Запуск Actions](${run.html_url}/attempts/${run.run_attempt})  \nВмешательство человека: ${human}.`
+            });
