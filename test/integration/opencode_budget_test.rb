@@ -34,6 +34,13 @@ class OpencodeBudgetTest < ActiveSupport::TestCase
     assert_equal "", report(marker: "Агент завершил работу (budget-v1)", fork: true)
   end
 
+  test "reports infrastructure failure before admission" do
+    assert_includes report(marker: nil), "`infra`"
+    workflow = YAML.safe_load_file(Rails.root.join(".github/workflows/opencode.yml"))
+    names = workflow.fetch("jobs").fetch("opencode").fetch("steps").map { |step| step["name"] }
+    assert_operator names.index("Проверить наличие ключа модели"), :<, names.index("Попытка допущена (budget-v1)")
+  end
+
   private
 
   def budget(event:, attempt:, admitted:, missing_current: false, missing_job: false)

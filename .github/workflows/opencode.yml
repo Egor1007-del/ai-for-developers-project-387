@@ -96,6 +96,11 @@ jobs:
       - name: Лимит исчерпан (budget-v1)
         if: steps.budget.outputs.result == 'limit_exhausted'
         run: 'true'
+      - name: Проверить наличие ключа модели
+        if: steps.budget.outputs.result == 'allowed'
+        env:
+          OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
+        run: test -n "$OPENCODE_API_KEY"
       - name: Попытка допущена (budget-v1)
         if: steps.budget.outputs.result == 'allowed'
         run: 'true'
