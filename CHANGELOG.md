@@ -1,5 +1,18 @@
 # Список изменений
 
+## [0.6.0](https://github.com/Egor1007-del/ai-for-developers-project-387/compare/v0.5.0...v0.6.0) (2026-11-28)
+
+
+### Новые возможности
+
+* ограничить запуски интерактивного агента в PR ([4f6af71](https://github.com/Egor1007-del/ai-for-developers-project-387/commit/4f6af71221ea30a85bb4cde7f678843cd807e483))
+
+
+### Исправления
+
+* исключить релизные ветки из авторевью ([af4f8c5](https://github.com/Egor1007-del/ai-for-developers-project-387/commit/af4f8c5f8c4f6d29a037186c861f2643cbc5a7b7))
+* распознавать отсутствие ключа агента ([449b717](https://github.com/Egor1007-del/ai-for-developers-project-387/commit/449b7179d674b97c46e1d31a68abeacc6ff74d2f))
+
 ## [0.5.0](https://github.com/Egor1007-del/ai-for-developers-project-387/compare/v0.4.0...v0.5.0) (2026-11-28)
 
 
