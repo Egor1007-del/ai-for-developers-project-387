@@ -1,5 +1,17 @@
 # Список изменений
 
+## [0.5.0](https://github.com/Egor1007-del/ai-for-developers-project-387/compare/v0.4.0...v0.5.0) (2026-11-28)
+
+
+### Новые возможности
+
+* настроить автоматическое ревью pull request ([8b2ce2e](https://github.com/Egor1007-del/ai-for-developers-project-387/commit/8b2ce2e6d93a56a3f9581fc738bc650db88fbd3b))
+
+
+### Исправления
+
+* исправить запуск OpenCode при авторевью ([b20c047](https://github.com/Egor1007-del/ai-for-developers-project-387/commit/b20c0470b83aef3d79765ee996581e116db0a610))
+
 ## [0.4.0](https://github.com/Egor1007-del/ai-for-developers-project-387/compare/v0.3.0...v0.4.0) (2026-11-24)
 
 
